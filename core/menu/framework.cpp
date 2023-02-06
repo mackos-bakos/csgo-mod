@@ -157,23 +157,25 @@ void menu_framework::color_selection(std::int32_t x, std::int32_t y, vec3_t& col
 	GetCursorPos(&cursor); ScreenToClient(GetForegroundWindow(), &cursor);
 	if(opened) {
 		//render::draw_filled_rect(x, y, 60, 60, color::gui_hint_4()); //foreground
+		render::draw_filled_rect(x - 30, y - 1,52, 10, color::black());
 		for (int red = 0; red < 50; red ++) {
-			for (int green = 0.f; green < 50; green ++) {
-				render::draw_filled_rect(x + red + 5,y + green + 5, 1, 1, color(red * 5, green * 5, 255 - ((green * 2.5f) + (red * 2.5f)), 255));
+			for (int green = 0.f; green < 8; green ++) {
+				render::draw_filled_rect(x - red + 20,y + green, 1, 1, color(red * 5, green * 31,variables::visuals::cham::blue, 255));
 			}
 		}
-		if ((cursor.x > x + 5) && (cursor.x < x + 55) && (cursor.y > y + 5) && (cursor.y < y + 55) && (GetAsyncKeyState(VK_LBUTTON) & 1)) {
-			float c2s_x, c2s_y; c2s_x = cursor.x - (x + 5); c2s_y = cursor.y - (y + 5);
+		if ((cursor.x > x - 30) && (cursor.x < x + 20) && (cursor.y > y) && (cursor.y < y + 8) && (GetAsyncKeyState(VK_LBUTTON) & 1)) {
+			float c2s_x, c2s_y; c2s_x = 50 - (cursor.x - (x - 30)); c2s_y = cursor.y - (y);
 			float red = ((c2s_x * 5.f) / 255.f);
-			float green = ((c2s_y * 5.f) / 255.f);
-			float blue = ((255.f - ((c2s_x * 2.5f) + (c2s_y * 2.5))) / 255.f);
+			float green = ((c2s_y * 31.f) / 255.f);
+			float blue = (variables::visuals::cham::blue / 255.f);
 			col = {red,green,blue};
 			opened = !opened;
 		}
 	}
 	else {
-		render::draw_filled_rect(x, y, 5, 5, color(col.x * 255.f, col.y * 255.f, col.z * 255.f, 255));
-		if ((cursor.x > x) && (cursor.x < x + 5) && (cursor.y > y) && (cursor.y < y + 5) && (GetAsyncKeyState(VK_LBUTTON) & 1)) {
+		render::draw_filled_rect(x - 1, y - 1, 22, 10, color::black());
+		render::draw_filled_rect(x, y, 20, 8, color(col.x * 255.f, col.y * 255.f, col.z * 255.f, 255));
+		if ((cursor.x > x) && (cursor.x < x + 20) && (cursor.y > y) && (cursor.y < y + 8) && (GetAsyncKeyState(VK_LBUTTON) & 1)) {
 			opened = !opened;
 		}
 	}

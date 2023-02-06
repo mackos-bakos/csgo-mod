@@ -125,6 +125,7 @@ namespace variables {
 			inline bool enemy = false;
 			inline bool enemy_invis = false;
 			inline bool extend_chams = false;
+			inline float blue = 0.f;
 		}
 	}
 	inline DWORD LocalP = NULL;

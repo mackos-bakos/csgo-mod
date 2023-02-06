@@ -25,7 +25,8 @@ void menu::render() {
 		menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 20, render::fonts::button_font, "visuals", variables::bVisuals);
 		if (variables::bVisuals) {
 			//chams
-			menu_framework::check_box(variables::menu::x + 230, variables::menu::y + 20, render::fonts::button_font, "chams", variables::visuals::chams);
+			menu_framework::slider(variables::menu::x + 230, variables::menu::y + 20,120, render::fonts::button_font, "", variables::visuals::cham::blue, 0, 255);
+
 			menu_framework::check_box(variables::menu::x + 230, variables::menu::y + 40, render::fonts::button_font, "weapons", variables::visuals::cham::weapon);
 			menu_framework::check_box(variables::menu::x + 230, variables::menu::y + 60, render::fonts::button_font, "hands", variables::visuals::cham::arms);
 			menu_framework::check_box(variables::menu::x + 230, variables::menu::y + 80, render::fonts::button_font, "sleeves", variables::visuals::cham::sleeves);
