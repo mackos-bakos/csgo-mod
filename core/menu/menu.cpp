@@ -64,25 +64,28 @@ void menu::render() {
 	case 1:
 		menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 20, render::fonts::button_font, "aimbot", variables::bAimbot);
 		if (variables::bAimbot) {
-			menu_framework::selection_interface(variables::menu::x + 90, variables::menu::y + 20, variables::aim_type_selections, variables::aim_type, variables::aim_type_selections_opened);
-			menu_framework::selection_interface(variables::menu::x + 150, variables::menu::y + 20, variables::aim_priority_selections, variables::aim_priority, variables::aim_priority_selections_opened);
+			menu_framework::selection_interface(variables::menu::x + 10, variables::menu::y + 90, variables::aim_type_selections, variables::aim_type, variables::aim_type_selections_opened);
+			menu_framework::selection_interface(variables::menu::x + 10, variables::menu::y + 110, variables::aim_priority_selections, variables::aim_priority, variables::aim_priority_selections_opened);
 
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 35, render::fonts::button_font, "rcs", variables::aimbot::rcs);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 50, render::fonts::button_font, "sticky", variables::aimbot::sticky);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 65, render::fonts::button_font, "remove punch", variables::aimbot::remove_punch);
+
+			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 135, render::fonts::button_font, "draw fov", variables::aimbot::drawfov);
+			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 155, render::fonts::button_font, "draw deadzone", variables::aimbot::drawdeadzone);
 
 			// fov,rand,smoothing and deadzone
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 30, render::fonts::button_font, "smoothing", variables::aimbot::smooth);
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 50, render::fonts::button_font, "randomisation", variables::aimbot::random);
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 70, render::fonts::button_font, "fov", variables::aimbot::fovcheck);
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 90, render::fonts::button_font, "deadzone", variables::aimbot::deadzone);
-			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 110, render::fonts::button_font, "dz ex delay", variables::aimbot::deadzonedelay);
+			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 110, render::fonts::button_font, "dz ex delay", variables::aimbot::dead_zone_delay);
 
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 30, 125, render::fonts::button_font, "smoothing", variables::aimbot::smoothing, 0, 100);
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 50, 125, render::fonts::button_font, "randomis", variables::aimbot::randomisation, 0, 9);
-			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 70, 125, render::fonts::button_font, "aim fov", variables::aimbot::fovcircle, 1, 300);
-			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 90, 125, render::fonts::button_font, "aim deadzone", variables::aimbot::deadzonesize, 1, variables::aimbot::fovcircle * 0.6f);
-			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 110, 125, render::fonts::button_font, "dz delay", variables::aimbot::deadzonedelaytime, 0, 1);
+			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 70, 125, render::fonts::button_font, "aim fov", variables::aimbot::fov_circle, 1, 300);
+			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 90, 125, render::fonts::button_font, "aim deadzone", variables::aimbot::dead_zone_size, 1, variables::aimbot::fov_circle * 0.6f);
+			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 110, 125, render::fonts::button_font, "dz delay", variables::aimbot::dead_zone_delay_time, 0, 1);
 			// activations
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 350, render::fonts::button_font, "activations", variables::aimbot::b1);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 370, render::fonts::button_font, "deactivations", variables::aimbot::b2);

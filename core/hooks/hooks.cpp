@@ -97,10 +97,14 @@ void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repain
 		visuals::master::VisualsLoop();
 		menu::toggle();
 		menu::render();
-		if (variables::aimbot::fovcheck && csgo::local_player->is_alive()) {
+		if (csgo::local_player->is_alive()) {
 			int x, y; interfaces::engine->get_screen_size(x, y);
-			render::draw_circle(x/2, y/2, variables::aimbot::fovcircle, 360, color(255, 255, 255, 255));
-			render::draw_circle(x/2, y/2, variables::aimbot::deadzonesize, 360, color(255, 0, 0, 255));
+			if (variables::aimbot::drawfov) {
+				render::draw_circle(x / 2, y / 2, variables::aimbot::fov_circle, 360, color(255, 255, 255, 255));
+			}
+			if (variables::aimbot::drawdeadzone) {
+				render::draw_circle(x / 2, y / 2, variables::aimbot::dead_zone_size, 360, color(255, 0, 0, 255));
+			}
 		}
 		break;
 

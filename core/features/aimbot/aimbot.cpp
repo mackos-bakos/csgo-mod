@@ -2,6 +2,8 @@
 void aimbot::master::aim_at_target(c_usercmd* cmd) {
 	if (!variables::bAimbot || csgo::local_player->health() < 1) {
 		variables::aimbot_target = NULL;
+		variables::aimbot::entered_deadzone = false;
+		variables::aimbot::dead_zone_exit = NULL;
 		return;
 	}
 	vec3_t view_angles;  interfaces::engine->get_view_angles(view_angles);
@@ -38,6 +40,8 @@ void aimbot::master::aim_at_target(c_usercmd* cmd) {
 	variables::aimbot_target = target;
 	if (target == NULL) {
 		variables::angle = { view_angles.x,view_angles.y };
+		variables::aimbot::entered_deadzone = false;
+		variables::aimbot::dead_zone_exit = NULL;
 		return;
 	}
 	vec3_t AimAt = target->get_bone_position(8);
@@ -69,9 +73,24 @@ void aimbot::master::aim_at_target(c_usercmd* cmd) {
 			move = (10.f * (variables::aimbot::smoothing / 100.f));
 		}
 		if (variables::aim_type == 0) {
-			if (variables::aimbot::fovcheck && variables::aimbot::deadzone && xhair_distance < variables::aimbot::deadzonesize) {
+			if (variables::aimbot::fovcheck && variables::aimbot::deadzone && xhair_distance < variables::aimbot::dead_zone_size) {
+				variables::aimbot::entered_deadzone = true;
 				return;
 			}
+			else if (variables::aimbot::fovcheck && variables::aimbot::dead_zone_delay && variables::aimbot::entered_deadzone) {
+				variables::aimbot::dead_zone_exit = time(0);
+				variables::aimbot::entered_deadzone = false;
+			}
+
+			if (variables::aimbot::dead_zone_exit != NULL) {
+				if (difftime(time(0), variables::aimbot::dead_zone_exit) < variables::aimbot::dead_zone_delay_time) {
+					return;
+				}
+			}
+
+			variables::aimbot::entered_deadzone = false;
+			variables::aimbot::dead_zone_exit = NULL;
+
 			if (!variables::aimbot::rcs) {
 				rec_angle = { pitch,yaw,0.f };
 			}
@@ -217,7 +236,7 @@ player_t* aimbot::sub::get_best_target() {
 			break;
 		}
 		if (variables::aimbot::fovcheck && variables::aim_priority == 1) {
-			if (entity_distance > variables::aimbot::fovcircle){ 
+			if (entity_distance > variables::aimbot::fov_circle){ 
 				continue; 
 			}
 		}
@@ -267,43 +286,6 @@ bool aimbot::sub::visible(player_t* entity) {
 	}
 }
 
-bool aimbot::sub::IsTransparent(player_t* entity) {
-	model_t* model = entity->model();
-	if (model->flags & material_var_translucent) {
-		return true;
-	}
-	return false;
-}
-
-bool aimbot::sub::is_wall_bangable(player_t* entity) {
-	return true;
-}
-
-void aimbot::sub::auto_stop(c_usercmd* cmd) {
-	if (!variables::aimbot::autostop) {
-		return;
-	}
-	vec3_t cur_vel = csgo::local_player->velocity();
-	if (csgo::local_player->is_moving()) {
-		if (cur_vel.x > 0) {
-			console::log("moving forward \n");
-			cmd->forwardmove = -(cur_vel.x);
-		}
-		else {
-			console::log("moving backward \n");
-			cmd->forwardmove = abs(cur_vel.x);
-		}
-		if (cur_vel.y > 0) {
-			console::log("moving left \n");
-			cmd->sidemove = -(cur_vel.y);
-		}
-		else {
-			console::log("moving right \n");
-			cmd->sidemove = abs(cur_vel.y);
-		}
-	}
-}
-
 void aimbot::sub::auto_shoot(c_usercmd* cmd) {
 	weapon_t* weapon = csgo::local_player->active_weapon();
 	weapon_info_t* info = weapon->get_weapon_data();
@@ -311,24 +293,19 @@ void aimbot::sub::auto_shoot(c_usercmd* cmd) {
 	if (!variables::aimbot::autoshoot || weapon->clip1_count() == 0 || csgo::local_player->health() < 1) {
 		return;
 	}
-	if (hit_chance()) {
-		if (weapon_type == 5 && csgo::local_player->aim_punch_angle().x == 0){
-			if (!csgo::local_player->is_scoped() && variables::aimbot::autoscope) {
-				cmd->buttons |= in_attack2;
-			}
-			else {
-				cmd->buttons |= in_attack;
-			}
-			return;
+	if (weapon_type == 5 && csgo::local_player->aim_punch_angle().x == 0){
+		if (!csgo::local_player->is_scoped() && variables::aimbot::autoscope) {
+			cmd->buttons |= in_attack2;
 		}
-		if (info->weapon_full_auto && weapon->recoil_index() < 5) {
+		else {
 			cmd->buttons |= in_attack;
 		}
-		else if (csgo::local_player->aim_punch_angle().x  == 0) {
-			cmd->buttons |= in_attack;
-		}
+		return;
 	}
-}
-bool aimbot::sub::hit_chance() {
-	return true;
+	if (info->weapon_full_auto && weapon->recoil_index() < 5) {
+		cmd->buttons |= in_attack;
+	}
+	else if (csgo::local_player->aim_punch_angle().x  == 0) {
+		cmd->buttons |= in_attack;
+	}
 }
