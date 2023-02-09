@@ -34,6 +34,7 @@ namespace variables {
 	inline bool bAimbot = false;
 	inline bool removals_opened = false;
 	inline bool misc_opened = false;
+	inline bool aim_at_opened = false;
 
 	inline vec3_t saved_punch = {0.f,0.f,0.f};
 	inline vec3_t saved_punch2 = { 0.f,0.f,0.f };
@@ -58,7 +59,9 @@ namespace variables {
 	inline selections aimbot_active_selections = { "m1","firing","scoped","x","x","x","x" };
 	inline selections removals_selections = { "scope","weapon","hands","sleeve","friendlys","x","x" };
 	inline selections misc_selections = { "hitmarker","x","x","x","x","x","x" };
+	inline selections aim_selection = { "head","body","x","x","x","x","x" };
 
+	inline int aim_at_selection = 0;
 	inline int aim_type = 1;
 	inline int aim_priority = 1;
 	inline int tracer_origin = 0;
@@ -109,13 +112,17 @@ namespace variables {
 		inline bool deadzone = false;
 		inline bool dead_zone_delay = false;
 		inline bool entered_deadzone = false;
+		inline bool target_switch_delay = false;
+		inline bool switched_targeted = false;
 
 		inline float smoothing = 0.f;
 		inline float fov_circle = 10.f;
 		inline float randomisation = 0.f;
 		inline float dead_zone_size = 2.f;
-		inline float dead_zone_delay_time = 0.2f;
+		inline float dead_zone_delay_time = 0.05f;
+		inline float target_switch_delay_time = 0.1f;
 
+		inline time_t target_switch_time = NULL;
 		inline time_t dead_zone_exit = NULL;
 	};
 	inline bool bVisuals = true;

@@ -66,13 +66,14 @@ void menu::render() {
 		if (variables::bAimbot) {
 			menu_framework::selection_interface(variables::menu::x + 10, variables::menu::y + 90, variables::aim_type_selections, variables::aim_type, variables::aim_type_selections_opened);
 			menu_framework::selection_interface(variables::menu::x + 10, variables::menu::y + 110, variables::aim_priority_selections, variables::aim_priority, variables::aim_priority_selections_opened);
-
+			menu_framework::selection_interface(variables::menu::x + 10, variables::menu::y + 130, variables::aim_selection, variables::aim_at_selection, variables::aim_at_opened);
+			
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 35, render::fonts::button_font, "rcs", variables::aimbot::rcs);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 50, render::fonts::button_font, "sticky", variables::aimbot::sticky);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 65, render::fonts::button_font, "remove punch", variables::aimbot::remove_punch);
 
-			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 135, render::fonts::button_font, "draw fov", variables::aimbot::drawfov);
-			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 155, render::fonts::button_font, "draw deadzone", variables::aimbot::drawdeadzone);
+			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 155, render::fonts::button_font, "draw fov", variables::aimbot::drawfov);
+			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 175, render::fonts::button_font, "draw deadzone", variables::aimbot::drawdeadzone);
 
 			// fov,rand,smoothing and deadzone
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 30, render::fonts::button_font, "smoothing", variables::aimbot::smooth);
@@ -80,12 +81,15 @@ void menu::render() {
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 70, render::fonts::button_font, "fov", variables::aimbot::fovcheck);
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 90, render::fonts::button_font, "deadzone", variables::aimbot::deadzone);
 			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 110, render::fonts::button_font, "dz ex delay", variables::aimbot::dead_zone_delay);
+			menu_framework::check_box(variables::menu::x + 250, variables::menu::y + 130, render::fonts::button_font, "switch delay", variables::aimbot::target_switch_delay);
 
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 30, 125, render::fonts::button_font, "smoothing", variables::aimbot::smoothing, 0, 100);
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 50, 125, render::fonts::button_font, "randomis", variables::aimbot::randomisation, 0, 9);
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 70, 125, render::fonts::button_font, "aim fov", variables::aimbot::fov_circle, 1, 300);
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 90, 125, render::fonts::button_font, "aim deadzone", variables::aimbot::dead_zone_size, 1, variables::aimbot::fov_circle * 0.6f);
 			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 110, 125, render::fonts::button_font, "dz delay", variables::aimbot::dead_zone_delay_time, 0, 1);
+			menu_framework::slider(variables::menu::x + 330, variables::menu::y + 130, 125, render::fonts::button_font, "switch delay", variables::aimbot::target_switch_delay_time, 0, 1);
+
 			// activations
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 350, render::fonts::button_font, "activations", variables::aimbot::b1);
 			menu_framework::check_box(variables::menu::x + 10, variables::menu::y + 370, render::fonts::button_font, "deactivations", variables::aimbot::b2);
@@ -126,12 +130,6 @@ void menu::render() {
 		//menu_framework::color_selection(variables::menu::x + 60, variables::menu::x + 80, variables::test_col, variables::test_bool);
 		//menu_framework::selection_interface(variables::menu::x + 10, variables::menu::x + 50, variables::aim_type_selections, variables::aim_type, variables::aim_type_selections_opened);
 		break;
-	}
-	if (variables::aim_type == 1 && variables::aimbot::smooth) {
-		variables::aim_type == 0;
-	}
-	if (variables::aimbot::smooth && variables::aim_priority == 1) {
-		variables::aimbot::sticky = true;
 	}
 	//menu_framework::menu_movement(variables::menu::x, variables::menu::y, variables::menu::w, variables::menu::h + 100);
 }

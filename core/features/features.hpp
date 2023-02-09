@@ -31,6 +31,8 @@ namespace aimbot {
 		bool visible(player_t* entity);
 
 		void auto_shoot(c_usercmd* cmd);
+
+		vec3_t get_next_aimbot_move(vec3_t angle, vec3_t target,float step_size);
 	};
 }
 namespace visuals {
@@ -38,7 +40,6 @@ namespace visuals {
 		vec2_t Get2dPos(player_t* entity);
 		vec2_t Get2dBonePos(player_t* entity, int bone);
 		vec2_t Get2dCustom(player_t* entity, vec3_t custom);
-		vec2_t ViewAnglesToScreen(vec2_t angle);
 
 		void VisualsLoop();
 	}

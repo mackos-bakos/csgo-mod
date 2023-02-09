@@ -2,11 +2,15 @@
 void aimbot::master::aim_at_target(c_usercmd* cmd) {
 	if (!variables::bAimbot || csgo::local_player->health() < 1) {
 		variables::aimbot_target = NULL;
-		variables::aimbot::entered_deadzone = false;
-		variables::aimbot::dead_zone_exit = NULL;
 		return;
 	}
 	vec3_t view_angles;  interfaces::engine->get_view_angles(view_angles);
+	player_t* target = aimbot::sub::get_best_target();
+	if (target == NULL) {
+		variables::angle = { view_angles.x,view_angles.y };
+		return;
+	}
+
 	if (variables::aimbot::b1) {
 		if (variables::aimbot_active_selected.deref(0) && !GetAsyncKeyState(VK_LBUTTON) && !variables::menu::opened) {
 			return;
@@ -35,16 +39,16 @@ void aimbot::master::aim_at_target(c_usercmd* cmd) {
 			return;
 		}
 	}
-
-	player_t* target = aimbot::sub::get_best_target();
 	variables::aimbot_target = target;
-	if (target == NULL) {
-		variables::angle = { view_angles.x,view_angles.y };
-		variables::aimbot::entered_deadzone = false;
-		variables::aimbot::dead_zone_exit = NULL;
-		return;
+	vec3_t AimAt;
+	switch (variables::aim_at_selection) {
+	case 0:
+		AimAt = target->get_bone_position(8);
+		break;
+	case 1:
+		AimAt = target->get_bone_position(3);
+		break;
 	}
-	vec3_t AimAt = target->get_bone_position(8);
 	vec3_t local_origin = (csgo::local_player->origin() + csgo::local_player->view_offset()); 
 	vec3_t dif = AimAt - local_origin;
 
@@ -67,10 +71,10 @@ void aimbot::master::aim_at_target(c_usercmd* cmd) {
 	if (variables::aimbot::smooth) {
 		float move;
 		if (variables::aimbot::randomisation) {
-			int meh = variables::aimbot::randomisation; float step = rand() % meh; move = ((10.f - step) * (variables::aimbot::smoothing / 100.f));
+			int meh = variables::aimbot::randomisation; float step = rand() % meh; move = ((10.f - step) * ((100.f - variables::aimbot::smoothing) / 100.f));
 		}
 		else {
-			move = (10.f * (variables::aimbot::smoothing / 100.f));
+			move = (10.f * ((100.f - variables::aimbot::smoothing) / 100.f));
 		}
 		if (variables::aim_type == 0) {
 			if (variables::aimbot::fovcheck && variables::aimbot::deadzone && xhair_distance < variables::aimbot::dead_zone_size) {
@@ -237,7 +241,7 @@ player_t* aimbot::sub::get_best_target() {
 		}
 		if (variables::aimbot::fovcheck && variables::aim_priority == 1) {
 			if (entity_distance > variables::aimbot::fov_circle){ 
-				continue; 
+				continue;
 			}
 		}
 		if (variables::aimbot::transpcheck && entity->has_gun_game_immunity()) {
@@ -281,7 +285,16 @@ float aimbot::sub::Xhair_Distance(player_t* entity) {
 	return sqrt((ChangeInY * ChangeInY) + (ChangeInX * ChangeInX));
 }
 bool aimbot::sub::visible(player_t* entity) {
-	if (csgo::local_player->can_see_player_pos(csgo::local_player, entity->get_bone_position(8))) {
+	int bone_id = 0;
+	switch (variables::aim_at_selection) {
+	case 0:
+		bone_id = 8;
+		break;
+	case 1:
+		bone_id = 0;
+		break;
+	}
+	if (csgo::local_player->can_see_player_pos(csgo::local_player, entity->get_bone_position(bone_id))) {
 		return true;
 	}
 }
@@ -308,4 +321,20 @@ void aimbot::sub::auto_shoot(c_usercmd* cmd) {
 	else if (csgo::local_player->aim_punch_angle().x  == 0) {
 		cmd->buttons |= in_attack;
 	}
+}
+
+vec3_t aimbot::sub::get_next_aimbot_move(vec3_t angle, vec3_t target,float step_size) {
+	double dx = target.x - angle.x;
+	double dy = target.y - angle.y;
+
+	double magnitude = sqrt(dx * dx + dy * dy);
+
+	dx *= step_size / magnitude;
+	dy *= step_size / magnitude;
+
+	vec3_t newCoordinate;
+	newCoordinate.x = angle.x + dx;
+	newCoordinate.y = angle.y + dy;
+	newCoordinate.z = 0.f;
+	return newCoordinate;
 }
